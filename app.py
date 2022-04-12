@@ -2,7 +2,8 @@
 import streamlit as st
 import pandas as pd
 import re
-import os
+import gspread as gs
+#from google.oauth2 import service_account
 
 month_word = {
 'January':1,
@@ -18,6 +19,19 @@ month_word = {
 'November':11,
 'December':12
 }
+
+########### COLORE BOTTONE ################
+m = st.markdown("""
+<style>
+div.stButton > button:first-child {
+    background-color: #0099ff;
+    color:#ffffff;
+}
+div.stButton > button:hover {
+    background-color: #00ff00;
+    color:#ff0000;
+    }
+</style>""", unsafe_allow_html=True)
 
 def clean_time(text):
     """Remove special patterns - email, url, date etc."""
@@ -89,7 +103,7 @@ def main():
         df["Data"] = df['day'].astype(str) +"-"+df['monthn'].astype(str)+"-"+df['year'].astype(str)
         #df["Data"] = pd.to_datetime(df['Data'], format='%d-%m-%Y')
 
-        with st.spinner("Training..."):
+        with st.spinner("Processing Data..."):
             st.balloons()
             import io
             buffer = io.BytesIO()
@@ -104,6 +118,25 @@ def main():
                     data=buffer,
                     file_name="cleaned_time_report_info.xlsx",
                     mime="application/vnd.ms-excel")
+                
+                if st.button('Publish G-sheet'):
+
+                    # 1 ######## append  to google sheet ######################
+                    #id=https://docs.google.com/spreadsheets/d/1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM/edit#gid=0
+                    #condivedere il google sheet con la mail:"python@iron-pottery-342915.iam.gserviceaccount.com"
+                    df = df.fillna('')
+                    gsheetId = '1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM'
+                    gc = gs.service_account(filename="new_bigquery.json")
+                    sh = gc.open_by_key(gsheetId)
+                    worksheet = sh.get_worksheet(0)#index sheet inside file
+                    #data_list = df.values.tolist() 
+                    #worksheet.append_rows(data_list)
+
+                    worksheet.clear() #clear sheet
+                    #replace all values
+                    worksheet.update([df.columns.values.tolist()] + df.values.tolist())
+                    st.write('Published on GoogleSheet!')
+                    st.write("check GoogleSheet at this [link](https://docs.google.com/spreadsheets/d/1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM/edit#gid=0)")
 
     ###### transformation #####################################
 

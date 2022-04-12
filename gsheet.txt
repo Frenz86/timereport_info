@@ -1,0 +1,17 @@
+# 1 ######## append  to google sheet ######################
+    #id=https://docs.google.com/spreadsheets/d/1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM/edit#gid=0
+    #condivedere il google sheet con la mail:"python@iron-pottery-342915.iam.gserviceaccount.com"
+    df = df.fillna('')
+    gsheetId = '1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM'
+    gc = gs.service_account(filename="new_bigquery.json")
+    sh = gc.open_by_key(gsheetId)
+    worksheet = sh.sheet2
+    #data_list = df.values.tolist() 
+    #worksheet.append_rows(data_list)
+
+    worksheet.clear() #clear sheet
+    #replace all values
+    worksheet.update([df.columns.values.tolist()] + df.values.tolist())
+    print('Published_google_sheet!')
+
+##########################################################
