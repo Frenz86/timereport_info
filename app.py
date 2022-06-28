@@ -38,13 +38,17 @@ def clean_time(text):
     # _regex = re.compile(r"(\d+):(\d+)-(\d+):(\d+)")
     # _regex2 = re.compile(r"(\d+):(\d+)")
     # spaces = re.compile(r"\s{2,}")
-    reg = re.compile(r"(?<=2022).*$")
+    reg0 = re.compile(r"(?<=2021).*$")
+    reg1 = re.compile(r"(?<=2022).*$")
+    reg2 = re.compile(r"(?<=2023).*$")
 
     # ## remove
     # text = _regex.sub(" ", text)
     # text = _regex2.sub("", text)
     # text = spaces.sub("", text)
-    text = reg.sub("", text)
+    text = reg0.sub("", text)
+    text = reg1.sub("", text)
+    text = reg2.sub("", text)
     return text
 
 def clean_special_patterns(text):
