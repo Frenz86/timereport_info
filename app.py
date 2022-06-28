@@ -72,6 +72,7 @@ def main():
     uploaded_file = st.file_uploader("Choose a file")
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
+        #df.drop('Caratteristica',axis=1, inplace=True)
         df.fillna('', inplace=True)
         df['Project Owner'] = df['Project Owner'].apply(clean_special_patterns)
         df['Prodotto'] = df['Prodotto'].apply(clean_special_patterns)
@@ -102,6 +103,11 @@ def main():
         df = df[df.year != 0]
         df["Data"] = df['day'].astype(str) +"-"+df['monthn'].astype(str)+"-"+df['year'].astype(str)
         #df["Data"] = pd.to_datetime(df['Data'], format='%d-%m-%Y')
+        df['Opportunità'] = df['Opportunità'].str.split(',')
+        df = df.explode('Opportunità')
+        df['Minuti'] /= df['Minuti'].groupby(level=0).transform('count')
+        df['Ore dedicate'] = df['Minuti']/60
+        df = df.reset_index(drop=True)
 
         with st.spinner("Processing Data..."):
             st.balloons()
@@ -139,7 +145,6 @@ def main():
                     st.write("check GoogleSheet at this [link](https://docs.google.com/spreadsheets/d/1GU0fTDaMPlwK7VecwlrBoCDNHvdLaGmGVvKgNmMIhDM/edit#gid=0)")
 
     ###### transformation #####################################
-
 
 if __name__ == "__main__":
     main()
