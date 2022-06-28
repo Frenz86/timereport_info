@@ -35,14 +35,16 @@ div.stButton > button:hover {
 
 def clean_time(text):
     """Remove special patterns - email, url, date etc."""
-    _regex = re.compile(r"(\d+):(\d+)-(\d+):(\d+)")
-    _regex2 = re.compile(r"(\d+):(\d+)")
-    spaces = re.compile(r"\s{2,}")
+    # _regex = re.compile(r"(\d+):(\d+)-(\d+):(\d+)")
+    # _regex2 = re.compile(r"(\d+):(\d+)")
+    # spaces = re.compile(r"\s{2,}")
+    reg = re.compile(r"(?<=2022).*$")
 
-    ## remove
-    text = _regex.sub(" ", text)
-    text = _regex2.sub("", text)
-    text = spaces.sub("", text)
+    # ## remove
+    # text = _regex.sub(" ", text)
+    # text = _regex2.sub("", text)
+    # text = spaces.sub("", text)
+    text = reg.sub("", text)
     return text
 
 def clean_special_patterns(text):
